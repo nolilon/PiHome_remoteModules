@@ -1,18 +1,11 @@
 #include <ESP8266WiFi.h>
 #include "mywifi.h"
 
-void connectWiFi()
-{
-    WiFi.mode(WIFI_OFF);
-    delay(1000);
-    WiFi.mode(WIFI_STA);
-    delay(1000);
-    WiFi.begin(ssid, password);
+void connectWiFi();
 
-    while ( WiFi.status() != WL_CONNECTED ) delay(1000);
-}
+#define WEATHER_AND_CHRISTMAS_LED
+// #define LIGHT_ALARM
 
-#define LIGHT_ALARM
 
 #ifdef LIGHT_ALARM
 #include "lightalarm.h"
@@ -32,3 +25,40 @@ void loop()
     alarm.loop();
 }
 #endif
+
+
+#ifdef WEATHER_AND_CHRISTMAS_LED
+#include "weatherstation.h"
+WeatherStation weather(notebookbIp, 6000, 0x76, 2);
+
+void setup() 
+{
+    Serial.begin(115200);
+    weather.init();
+    connectWiFi();
+}
+
+void loop() 
+{
+    weather.loop();
+}
+#endif
+
+
+void connectWiFi()
+{
+    Serial.println();
+    delay(2000);
+
+    if (WiFi.SSID() != ssid) WiFi.begin(ssid, password);
+    else Serial.println("WiFi config loaded");
+
+    Serial.printf("Connecting to %s", ssid);
+
+    while ( WiFi.status() != WL_CONNECTED ) 
+    {        
+        delay(1000);
+        Serial.print('.');
+    }
+    Serial.println("done");
+}
