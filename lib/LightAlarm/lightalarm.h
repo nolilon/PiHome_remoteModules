@@ -5,18 +5,24 @@
 class LightAlarm
 {
 public:
-    LightAlarm(unsigned short port, unsigned char pwmPin);
+    LightAlarm(char const *ip, unsigned short port, unsigned char pwmPin);
 
+    void init();
     void loop();
 
 private:
+    char const *const _ip;
     unsigned short const _port;
     unsigned char const _pinPwm;
 
-    bool _inProgress = false;
     int _currentPwm = 0;
+    int _targetPwm = 0;
 
     void checkCommand();
     void checkLight();
-    unsigned long _lastTime = 0;
+
+    void toggleLight();
+    unsigned long _lightLastTime = 0;
+    unsigned long _commandLastTime = 0;
+    unsigned long _period = 1000;
 };

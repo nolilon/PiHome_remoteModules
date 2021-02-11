@@ -5,24 +5,31 @@
 
 WiFiClient _client;
 
-LightAlarm::LightAlarm(unsigned short port, unsigned char pwmPin)
-    : _port(port),
+LightAlarm::LightAlarm(char const *ip, unsigned short port, unsigned char pwmPin)
+    : _ip(ip),
+      _port(port),
       _pinPwm(pwmPin)
 {}
 
+void LightAlarm::init()
+{
+    pinMode(_pinPwm, OUTPUT);
+    digitalWrite(_pinPwm, LOW);
+    analogWriteFreq(300);
+    // analogWriteRange(1023);
+}
+
 void LightAlarm::loop()
 {
-    if ( _inProgress ) 
-        checkLight();
-    else 
-        checkCommand();
+    checkLight();
+    checkCommand();
 }
 
 void LightAlarm::checkCommand()
 {
     auto currentTime = millis();
-    if ( currentTime - _lastTime < 5000 ) return;
-    _lastTime = currentTime;
+    if ( currentTime - _commandLastTime < 1000 ) return;
+    _commandLastTime = currentTime;
 
     Serial.println("Checking command...");
 
@@ -35,29 +42,35 @@ void LightAlarm::checkCommand()
         char command = _client.read();
         Serial.printf("Command: %c\n", command);
 
-        if ( command == 'S' ) _inProgress = true;
-        // else if (command == 'F') analogWrite(_pinPwm, 0);
+        if ( command == 'S' ) 
+        {
+            _period = 4000;
+            _targetPwm = 1023;
+            _client.write(true);
+        }
+        else if (command == 'F') toggleLight();
     }
-    else _client.connect("192.168.1.68", _port);
+    else _client.connect(_ip, _port);
 }
 
 void LightAlarm::checkLight()
 {
-    constexpr unsigned long lightUpDuration = 900000;
-    constexpr unsigned long period = lightUpDuration / 1024;
-
     auto currentTime = millis();
-    if ( currentTime - _lastTime < period ) return;
-    _lastTime = currentTime;
+    if ( currentTime - _lightLastTime < _period ) return;
+    _lightLastTime = currentTime;
 
-    if (_currentPwm < 1023) ++_currentPwm;
+    if (_currentPwm < _targetPwm) ++_currentPwm;
+    else if (_currentPwm > _targetPwm) --_currentPwm;
+    else return;
 
     Serial.println(_currentPwm);
     analogWrite(_pinPwm, _currentPwm);
+}
 
-    if (_currentPwm == 1023) 
-    {
-        _currentPwm = 0;
-        _inProgress = false;
-    }
+void LightAlarm::toggleLight()
+{
+    _period = 1;
+
+    if ( _currentPwm > 0 ) _targetPwm = 0;
+    else _targetPwm = 1023;
 }
