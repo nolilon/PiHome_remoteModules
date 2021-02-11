@@ -1,7 +1,7 @@
 #include "weatherstation.h"
 
-#include <WiFiClient.h>
-WiFiClient client;
+#include <ESP8266WiFi.h>
+WiFiClient _client;
 
 #include <Adafruit_BME280.h>
 Adafruit_BME280 bme;
@@ -11,6 +11,7 @@ WeatherStation::WeatherStation(char const *ip, unsigned short port, unsigned cha
       _port(port),
       _address(address),
       _powerPin(powerPin)
+    //   _client( new WiFiClient )
 {}
 
 void WeatherStation::init()
@@ -35,18 +36,19 @@ void WeatherStation::loop()
     // unsigned long start, stop;
     // start = millis();
 
-    if ( client.connected() )
+    if ( _client.connected() )
     {
-        // Serial.println("Client connected");
+        Serial.println("Client connected");
+        _period = 60000ul;
         
         char data[4];
         short *tempch = reinterpret_cast<short*>(data);
         short *humidch = reinterpret_cast<short*>(data+2);
         *tempch = bme.readTemperature()*10 - 5;
         *humidch = bme.readHumidity()*10;
-        // Serial.printf("T: %f, H: %f\n", (*tempch)/10., (*humidch)/10.);
+        Serial.printf("T: %f, H: %f\n", (*tempch)/10., (*humidch)/10.);
 
-        client.write(data,4);
+        _client.write(data,4);
         // Serial.println("Data sent");
 
         // if ( client.available() ) 
@@ -58,7 +60,11 @@ void WeatherStation::loop()
             // if ( command == 'Q' ) client.write('A');
         // }
     }
-    else client.connect(_ip, _port);
+    else 
+    {
+        _client.connect(_ip, _port);
+        _period = 10000ul;
+    }
     
     // stop = millis();
     // Serial.printf("Bme loop takes %lu ms\n\n", stop-start);

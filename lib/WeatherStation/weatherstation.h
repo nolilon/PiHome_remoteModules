@@ -1,5 +1,7 @@
 #pragma once
 
+// class WiFiClient;
+// #include <WiFiClient.h>
 
 class WeatherStation
 {
@@ -15,6 +17,8 @@ private:
     unsigned char const _address;
     unsigned short const _powerPin;
 
+    // WiFiClient _client;
+
     unsigned long _lastTime = 0;
-    unsigned long const _period = 60000;
+    unsigned long _period = 5000;
 };
