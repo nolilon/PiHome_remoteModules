@@ -5,9 +5,9 @@
 
 void connectWiFi()
 {
-    // WiFi.mode(WIFI_OFF);
-    // delay(1000);
-    // WiFi.mode(WIFI_STA);
+    WiFi.mode(WIFI_OFF);
+    delay(5000);
+    WiFi.mode(WIFI_STA);
     Serial.println();
     delay(2000);
 
