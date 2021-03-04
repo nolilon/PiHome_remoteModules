@@ -42,13 +42,9 @@ void LightAlarm::checkCommand()
         char command = _client.read();
         Serial.printf("Command: %c\n", command);
 
-        if ( command == 'S' ) 
-        {
-            _period = 4000;
-            _targetPwm = 1023;
-            _client.write(true);
-        }
-        else if (command == 'F') toggleLight();
+        if ( command == 'T' ) toggleLight();
+        else if (command == 'S') startAlarm();
+        else if (command == 'F') stopAlarm();
     }
     else _client.connect(_ip, _port);
 }
@@ -73,4 +69,20 @@ void LightAlarm::toggleLight()
 
     if ( _currentPwm > 0 ) _targetPwm = 0;
     else _targetPwm = 1023;
+
+    _client.write(_targetPwm > 0);
+}
+
+constexpr unsigned long alarmPeriod = 4000;
+void LightAlarm::startAlarm()
+{
+    _period = alarmPeriod;
+    _targetPwm = 1023;
+
+    _client.write(_targetPwm > 0);
+}
+
+void LightAlarm::stopAlarm()
+{
+    if (_period == alarmPeriod) toggleLight();
 }
