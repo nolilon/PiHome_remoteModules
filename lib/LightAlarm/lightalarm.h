@@ -24,8 +24,10 @@ private:
     void toggleLight();
     void startAlarm();
     void stopAlarm();
-    
+
     unsigned long _lightLastTime = 0;
     unsigned long _commandLastTime = 0;
     unsigned long _period = 1000;
+
+    unsigned long _disconnectTime = 0;
 };

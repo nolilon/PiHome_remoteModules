@@ -37,6 +37,7 @@ void LightAlarm::checkCommand()
 
     if ( _client.connected() )
     {
+        _disconnectTime = 0;
         Serial.println("Client connected");
         if ( !_client.available() ) return;
 
@@ -48,7 +49,12 @@ void LightAlarm::checkCommand()
         else if (command == 'S') startAlarm();
         else if (command == 'F') stopAlarm();
     }
-    else _client.connect(_ip, _port);
+    else 
+    {
+        _client.connect(_ip, _port);
+        if (_disconnectTime == 0) _disconnectTime = millis();
+        if (_disconnectTime > 300000ul) ESP.restart();
+    }
 }
 
 void LightAlarm::checkLight()
