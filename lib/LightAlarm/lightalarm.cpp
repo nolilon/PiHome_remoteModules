@@ -3,7 +3,9 @@
 #include "Arduino.h"
 #include <WiFiClient.h>
 
+namespace{
 WiFiClient _client;
+}
 
 LightAlarm::LightAlarm(char const *ip, unsigned short port, unsigned char pwmPin)
     : _ip(ip),
