@@ -53,7 +53,7 @@ void LightAlarm::checkCommand()
     {
         _client.connect(_ip, _port);
         if (_disconnectTime == 0) _disconnectTime = millis();
-        if (_disconnectTime > 300000ul) ESP.restart();
+        if (millis() - _disconnectTime > 300000ul) ESP.restart();
     }
 }
 
