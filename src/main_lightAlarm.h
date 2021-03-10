@@ -3,7 +3,7 @@
 #include "lightalarm.h"
 
 
-LightAlarm alarm(piIp, 6001, 4);
+LightAlarm alarm(piIp, 56701, 4);
 
 void setup() 
 {
