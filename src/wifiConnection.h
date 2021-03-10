@@ -6,8 +6,9 @@
 void connectWiFi()
 {
     WiFi.mode(WIFI_OFF);
-    delay(5000);
+    delay(10000);
     WiFi.mode(WIFI_STA);
+    WiFi.setOutputPower(17);
     Serial.println();
     delay(2000);
 
@@ -22,7 +23,7 @@ void connectWiFi()
         ++secs;
         delay(1000);
         Serial.print('.');
-        if (secs == 60) 
+        if (secs == 300) 
         {
             Serial.print("reload");
             WiFi.begin(ssid, password);
