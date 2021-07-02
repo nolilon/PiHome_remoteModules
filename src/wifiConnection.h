@@ -9,6 +9,7 @@ void connectWiFi()
     delay(10000);
     WiFi.mode(WIFI_STA);
     WiFi.setOutputPower(17);
+    Serial.begin(9600);
     Serial.println();
     delay(2000);
 

@@ -7,7 +7,6 @@ WeatherStation weather(piIp, 16000, 0x76, 2);
 
 void setup() 
 {
-    Serial.begin(115200);
     weather.init();
     connectWiFi();    
 }

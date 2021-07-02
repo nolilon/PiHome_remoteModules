@@ -6,8 +6,6 @@
 
 void setup() 
 {
-    Serial.begin(115200);
-
     WeatherStation weather(notebookbIp, 6000, 0x76, 2);
     weather.init();
 
