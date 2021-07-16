@@ -5,30 +5,22 @@
 
 void connectWiFi()
 {
-    WiFi.mode(WIFI_OFF);
-    delay(10000);
-    WiFi.mode(WIFI_STA);
-    WiFi.setOutputPower(17);
     Serial.begin(9600);
+    Serial.setDebugOutput(true);
     Serial.println();
-    delay(2000);
 
-    if (WiFi.SSID() != ssid) WiFi.begin(ssid, password);
-    else Serial.println("WiFi config loaded");
+    WiFi.mode(WIFI_STA);
+    WiFi.setAutoConnect(true);
+    WiFi.setOutputPower(18);
+    delay(1000);
 
-    Serial.printf("Connecting to %s", ssid);
+    WiFi.begin(ssid, password);
 
     while ( WiFi.status() != WL_CONNECTED ) 
     {        
-        static int secs = 0;
-        ++secs;
-        delay(1000);
-        Serial.print('.');
-        if (secs == 300) 
-        {
-            Serial.print("reload");
-            WiFi.begin(ssid, password);
-        }
+        delay(500);
+        // Serial.print('.');
+        Serial.print(WiFi.status());
     }
     Serial.println("done");
     Serial.println(WiFi.localIP());
