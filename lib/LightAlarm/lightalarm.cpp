@@ -81,7 +81,8 @@ void LightAlarm::toggleLight()
     _client.write(_targetPwm > 0);
 }
 
-constexpr unsigned long alarmPeriod = 4000;
+constexpr unsigned long lightUpMinutes = 40;
+constexpr unsigned long alarmPeriod = lightUpMinutes * 60 * 1000;
 void LightAlarm::startAlarm()
 {
     _period = alarmPeriod;
