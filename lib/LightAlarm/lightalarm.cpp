@@ -81,7 +81,7 @@ void LightAlarm::checkLight()
 
 void LightAlarm::toggleLight()
 {
-    _period = 1;
+    _period = 6;
 
     if ( _currentPwm > 0 ) _targetPwm = 0;
     else _targetPwm = 1023;
