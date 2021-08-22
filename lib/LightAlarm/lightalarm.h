@@ -32,4 +32,5 @@ private:
     unsigned long _disconnectTime = 0;
 
     void sendStatus() const;
+    bool _justConnected = true;
 };
