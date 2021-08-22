@@ -90,7 +90,7 @@ void LightAlarm::toggleLight()
 }
 
 constexpr unsigned long lightUpMinutes = 60;
-constexpr unsigned long alarmPeriod = lightUpMinutes * 60 * 1000;
+constexpr unsigned long alarmPeriod = lightUpMinutes * 60 * 1000 / 1024;
 void LightAlarm::startAlarm()
 {
     _period = alarmPeriod;
