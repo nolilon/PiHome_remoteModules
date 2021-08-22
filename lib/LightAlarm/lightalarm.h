@@ -30,4 +30,6 @@ private:
     unsigned long _period = 1000;
 
     unsigned long _disconnectTime = 0;
+
+    void sendStatus() const;
 };

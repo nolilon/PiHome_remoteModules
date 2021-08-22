@@ -7,6 +7,8 @@ namespace{
 WiFiClient _client;
 }
 
+unsigned long linearBrightnessPwm(unsigned long targetBrightness);
+
 LightAlarm::LightAlarm(char const *ip, unsigned short port, unsigned char pwmPin)
     : _ip(ip),
       _port(port),
@@ -68,7 +70,7 @@ void LightAlarm::checkLight()
     else return;
 
     Serial.println(_currentPwm);
-    analogWrite(_pinPwm, _currentPwm);
+    analogWrite(_pinPwm, linearBrightnessPwm(_currentPwm));
 }
 
 void LightAlarm::toggleLight()
@@ -81,7 +83,7 @@ void LightAlarm::toggleLight()
     _client.write(_targetPwm > 0);
 }
 
-constexpr unsigned long lightUpMinutes = 40;
+constexpr unsigned long lightUpMinutes = 60;
 constexpr unsigned long alarmPeriod = lightUpMinutes * 60 * 1000;
 void LightAlarm::startAlarm()
 {
@@ -94,4 +96,9 @@ void LightAlarm::startAlarm()
 void LightAlarm::stopAlarm()
 {
     if (_period == alarmPeriod) toggleLight();
+}
+
+unsigned long linearBrightnessPwm(unsigned long targetBrightness)
+{
+    return targetBrightness * targetBrightness / 1023ul;
 }
