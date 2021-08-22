@@ -111,5 +111,7 @@ void LightAlarm::sendStatus() const
 
 unsigned long linearBrightnessPwm(unsigned long targetBrightness)
 {
-    return targetBrightness * targetBrightness / 1023ul;
+    auto pwm = (targetBrightness * targetBrightness) / 1023ul;
+    if (pwm == 0 && targetBrightness > 0) pwm = 1;
+    return pwm;
 }
