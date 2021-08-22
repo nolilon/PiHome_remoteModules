@@ -40,6 +40,7 @@ void LightAlarm::checkCommand()
     if ( _client.connected() )
     {
         _disconnectTime = 0;
+        sendStatus();
         Serial.println("Client connected");
         if ( !_client.available() ) return;
 
@@ -80,7 +81,7 @@ void LightAlarm::toggleLight()
     if ( _currentPwm > 0 ) _targetPwm = 0;
     else _targetPwm = 1023;
 
-    _client.write(_targetPwm > 0);
+    sendStatus();
 }
 
 constexpr unsigned long lightUpMinutes = 60;
@@ -90,12 +91,17 @@ void LightAlarm::startAlarm()
     _period = alarmPeriod;
     _targetPwm = 1023;
 
-    _client.write(_targetPwm > 0);
+    sendStatus();
 }
 
 void LightAlarm::stopAlarm()
 {
     if (_period == alarmPeriod) toggleLight();
+}
+
+void LightAlarm::sendStatus() const
+{
+    _client.write(_targetPwm > 0);
 }
 
 unsigned long linearBrightnessPwm(unsigned long targetBrightness)
