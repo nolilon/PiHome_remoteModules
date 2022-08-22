@@ -84,17 +84,18 @@ void LightAlarm::toggleLight()
     _period = 6;
 
     if ( _currentPwm > 0 ) _targetPwm = 0;
-    else _targetPwm = 1023;
+    else _targetPwm = 700;
 
     sendStatus();
 }
 
-constexpr unsigned long lightUpMinutes = 60;
-constexpr unsigned long alarmPeriod = lightUpMinutes * 60 * 1000 / 1024;
+constexpr unsigned long lightUpMinutes = 90;
+constexpr unsigned long alarmMaxPwm = 700;
+constexpr unsigned long alarmPeriod = lightUpMinutes * 60 * 1000 / alarmMaxPwm;
 void LightAlarm::startAlarm()
 {
     _period = alarmPeriod;
-    _targetPwm = 1023;
+    _targetPwm = alarmMaxPwm;
 
     sendStatus();
 }
