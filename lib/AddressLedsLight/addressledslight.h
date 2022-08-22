@@ -3,8 +3,6 @@
 struct CHSV;
 struct CRGB;
 
-#include <WiFiClient.h>
-
 class AddressLedsLight
 {
 public:
@@ -16,7 +14,6 @@ public:
 private:
     char const *const _ip;
     unsigned short const _port;
-    WiFiClient _client;
     // unsigned short const _ledsPin; because it is template patameter of FastLED library
     unsigned const _ledsNum;
 
@@ -26,7 +23,7 @@ private:
     unsigned long _lastTime = 0;
 
     enum State {TurningOn, On, TurningOff, Off};
-    State _state = Off;
+    State _state = TurningOn;
 
     bool _justConnected = true;
 
